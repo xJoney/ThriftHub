@@ -30,7 +30,7 @@ class ChatDetailFragment : Fragment() {
 
         binding.chatHistory.text = "Last message: ${args.chatLastMessage}"
 
-          binding.chatbtnBack.setOnClickListener {
+        binding.chatbtnBack.setOnClickListener {
             findNavController().navigateUp()
         }
     }
