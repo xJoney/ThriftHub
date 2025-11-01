@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FEF7FF">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FEF7FF"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log in/Sign up"
+            android:textColor="#000"
+            android:textSize="22sp"
+            android:layout_marginBottom="32dp"/>
+
+        <EditText
+            android:id="@+id/inputEmail"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Email or phone number"
+            android:background="@drawable/rounded_input"
+            android:paddingHorizontal="16dp"
+            android:inputType="text"/>
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Password"
+            android:background="@drawable/rounded_input"
+            android:paddingHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:inputType="textPassword"/>
+
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Log In"
+            android:textAllCaps="false"
+            android:backgroundTint="#1877F2"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/txtForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Forgot password?"
+            android:textColor="#1877F2"
+            android:textSize="14sp"
+            android:layout_marginTop="10dp"/>
+
+
+        <Button
+            android:id="@+id/btnCreateAccount"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Create new account"
+            android:textAllCaps="false"
+            android:backgroundTint="#3BB54A"
+            android:textColor="@android:color/white"
+            android:layout_marginTop="28dp"/>
+    </LinearLayout>
+    </ScrollView>
+
+    <Button
+    android:id="@+id/loginbtnBack"
+    android:layout_width="60dp"
+    android:layout_height="50dp"
+    android:text="&#8592;"
+    android:textSize="18sp"
+    android:textStyle="bold"
+    android:backgroundTint="#6A4AA5"
+    android:textColor="@android:color/white"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    android:layout_margin="12dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,12 +1,10 @@
-package com.example.MarketplaceApp
+package com.example.marketplaceapp
 
 
 import android.os.Bundle
 import android.widget.*
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 
 class AddItemActivity : AppCompatActivity() {
 
@@ -16,8 +14,6 @@ class AddItemActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_add_item)
-
-
 
         dbHelper = DatabaseHelper(this)
         dbHelper.readableDatabase
@@ -35,7 +31,6 @@ class AddItemActivity : AppCompatActivity() {
         val users = dbHelper.getAllUsers()
         outputText.text = users.joinToString("\n")
 
-        // takes users input and insert into DB
         addButton.setOnClickListener {
             val name = nameInput.text.toString()
             val item = itemInput.text.toString()
@@ -52,15 +47,13 @@ class AddItemActivity : AppCompatActivity() {
             outputText.text = users.joinToString("\n")
         }
 
-        // clears all users
-        clear.setOnClickListener {
+           clear.setOnClickListener {
             dbHelper.clearAllUsers()
             val users = dbHelper.getAllUsers()
             outputText.text = users.joinToString("\n")
             Toast.makeText(this, "All records deleted", Toast.LENGTH_SHORT).show()
         }
 
-        // back button to go back to home page
         val back = findViewById<Button>(R.id.backbtn)
         back.setOnClickListener {
             finish()

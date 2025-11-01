@@ -1,4 +1,4 @@
-package com.example.MarketplaceApp
+package com.example.marketplaceapp
 
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +17,6 @@ data class User(
 class UserAdapter(private val users: List<User>) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
-        //holds ref to all the text views so we don't have to call it repeatedly
         class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val name: TextView = itemView.findViewById(R.id.userName)
             val item: TextView = itemView.findViewById(R.id.userItem)
@@ -26,14 +25,12 @@ class UserAdapter(private val users: List<User>) :
             val description: TextView = itemView.findViewById(R.id.userDescription)
         }
 
-        //create empty card
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
             val view = LayoutInflater.from(parent.context)
                 .inflate(R.layout.item_user, parent, false)
             return UserViewHolder(view)
         }
 
-        //inputs the data into empty card
         override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
             val user = users[position]
             holder.name.text = user.name

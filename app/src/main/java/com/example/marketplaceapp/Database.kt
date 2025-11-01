@@ -1,4 +1,4 @@
-package com.example.MarketplaceApp
+package com.example.marketplaceapp
 
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
@@ -39,8 +39,6 @@ class DatabaseHelper(context: Context) :
         onCreate(db)
     }
 
-
-    // insert data into db
     fun insertUser(name: String, item: String, address: String, price: String, description: String): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -57,8 +55,6 @@ class DatabaseHelper(context: Context) :
         return result != -1L
     }
 
-
-    //read all users
     fun getAllUsers(): List<User> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
@@ -80,21 +76,17 @@ class DatabaseHelper(context: Context) :
         return userList
     }
 
-    //clear all users in the db --> change to erasing one item at a time
     fun clearAllUsers() {
         val db = writableDatabase
         db.delete("Users", null, null)
         // Don’t call db.close() — keep it open for inspection
     }
 
-    // delete func
     fun delUser(){
         val db = writableDatabase
         val deletedRows = db.delete("Users", null, null)
     }
 
-    // update func
     fun updateUser(){
-        //add update
     }
     }

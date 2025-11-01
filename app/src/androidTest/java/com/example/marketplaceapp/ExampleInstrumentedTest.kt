@@ -1,4 +1,4 @@
-package com.example.MarketplaceApp
+package com.example.marketplaceapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
