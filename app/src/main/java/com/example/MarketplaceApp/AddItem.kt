@@ -59,5 +59,11 @@ class AddItemActivity : AppCompatActivity() {
             outputText.text = users.joinToString("\n")
             Toast.makeText(this, "All records deleted", Toast.LENGTH_SHORT).show()
         }
+
+        // back button to go back to home page
+        val back = findViewById<Button>(R.id.backbtn)
+        back.setOnClickListener {
+            finish()
+        }
     }
 }

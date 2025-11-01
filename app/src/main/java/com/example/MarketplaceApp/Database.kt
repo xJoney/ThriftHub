@@ -58,11 +58,11 @@ class DatabaseHelper(context: Context) :
     }
 
 
-    //gets all users
-    fun getAllUsers(): List<String> {
+    //read all users
+    fun getAllUsers(): List<User> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
-        val userList = mutableListOf<String>()
+        val userList = mutableListOf<User>()
 
         if (cursor.moveToFirst()) {
             do {
@@ -71,7 +71,8 @@ class DatabaseHelper(context: Context) :
                 val address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS))
                 val price = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRICE))
                 val desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
-                userList.add("$name - $item - $address - $price - $desc")
+                val user = User(name, item, address, price, desc)
+                userList.add(user)
             } while (cursor.moveToNext())
         }
 
@@ -86,9 +87,14 @@ class DatabaseHelper(context: Context) :
         // Don’t call db.close() — keep it open for inspection
     }
 
-
+    // delete func
     fun delUser(){
         val db = writableDatabase
         val deletedRows = db.delete("Users", null, null)
     }
-}
+
+    // update func
+    fun updateUser(){
+        //add update
+    }
+    }
