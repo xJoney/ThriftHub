@@ -51,12 +51,22 @@ class DashboardFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         val db = DatabaseHelper(requireContext())
-        val updatedListing =  db.getAllUsers()
-        val adapter = ListingAdapter(updatedListing){ selectedItem ->
-            Toast.makeText(requireContext(), "Clicked: ${selectedItem.item}",Toast.LENGTH_SHORT).show()
+        val updatedListing = db.getAllUsers()
+
+        binding.recyclerListings.adapter = ListingAdapter(updatedListing) { selectedItem ->
+
+            val action = DashboardFragmentDirections
+                .actionNavDashboardToItemDetailFragment(
+                    itemTitle = selectedItem.item,
+                    itemDescription = selectedItem.description,
+                    itemImage = R.drawable.ic_launcher_background,  // placeholder image
+                    sellerName = selectedItem.name
+                )
+
+            findNavController().navigate(action)
         }
-        binding.recyclerListings.adapter = adapter
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

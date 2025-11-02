@@ -25,6 +25,14 @@ class ItemDetailFragment : Fragment() {
         binding.itemDescription.text = args.itemDescription
         binding.itemImage.setImageResource(args.itemImage)
 
+        binding.buttonMessage.setOnClickListener {
+            val action = ItemDetailFragmentDirections.actionItemDetailFragmentToChatDetailFragment(
+                chatName = args.sellerName,
+                chatLastMessage =  "Start your conversation..."
+            )
+            findNavController().navigate(action)
+        }
+
         binding.itembtnBack.setOnClickListener {
             findNavController().navigateUp()
         }

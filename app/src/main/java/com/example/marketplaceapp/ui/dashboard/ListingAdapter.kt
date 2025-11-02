@@ -30,8 +30,10 @@ class ListingAdapter(
         holder.binding.txtPrice.text = "$${item.price}"
 
         holder.binding.root.setOnClickListener {
-            onItemClick(item) }
+            onItemClick(item)
+        }
     }
+
 
     override fun getItemCount(): Int = items.size
 }

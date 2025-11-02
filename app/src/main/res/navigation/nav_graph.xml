@@ -76,6 +76,13 @@
         <argument
             android:name="itemImage"
             app:argType="integer" />
+        <argument
+            android:name="sellerName"
+            app:argType="string" />
+
+        <action
+            android:id="@+id/action_itemDetailFragment_to_chatDetailFragment"
+            app:destination="@id/chatDetailFragment" />
     </fragment>
 
 </navigation>
