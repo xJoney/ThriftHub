@@ -17,6 +17,9 @@
         android:padding="10dp"
         android:clipToOutline="true" />
 
+
+
+
     <TextView
         android:id="@+id/txtTitle"
         android:layout_width="wrap_content"
@@ -25,13 +28,24 @@
         android:textStyle="bold"
         android:textColor="#000"
         android:textSize="14sp"
-        android:layout_marginTop="4dp" />
-
+        android:layout_gravity="start"/>
+    <TextView
+        android:id="@+id/txtPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="$35"
+        android:textStyle="bold"
+        android:textColor="#000"
+        android:textSize="14sp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="start"/>
     <TextView
         android:id="@+id/txtUpdated"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Updated today"
         android:textColor="#7A7A7A"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        android:layout_gravity="start"/>
+
 </LinearLayout>

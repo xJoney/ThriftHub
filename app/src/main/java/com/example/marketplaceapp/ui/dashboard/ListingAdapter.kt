@@ -27,6 +27,7 @@ class ListingAdapter(
 
         holder.binding.txtTitle.text = item.item
         holder.binding.txtUpdated.text = item.description
+        holder.binding.txtPrice.text = "$${item.price}"
 
         holder.binding.root.setOnClickListener {
             onItemClick(item) }
