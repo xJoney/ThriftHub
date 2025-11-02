@@ -39,6 +39,7 @@ class DatabaseHelper(context: Context) :
         onCreate(db)
     }
 
+    // function to insert user data
     fun insertUser(name: String, item: String, address: String, price: String, description: String): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
@@ -47,14 +48,14 @@ class DatabaseHelper(context: Context) :
             put(COLUMN_ADDRESS, address)
             put(COLUMN_PRICE, price)
             put(COLUMN_DESCRIPTION, description)
-
-
         }
         val result = db.insert(TABLE_NAME, null, values)
         db.close()
         return result != -1L
     }
 
+
+    // read all listings from db
     fun getAllUsers(): List<ListingData> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
@@ -83,11 +84,33 @@ class DatabaseHelper(context: Context) :
         // Don’t call db.close() — keep it open for inspection
     }
 
-    fun delUser(){
+    // delete row based on item name
+    fun delUser(itemName:String): Boolean{
         val db = writableDatabase
-        val deletedRows = db.delete("Users", null, null)
+        val deletedRows = db.delete(
+            "Users",
+            "$COLUMN_ITEM=?",
+            arrayOf(itemName))
+        db.close()
+        return deletedRows > 0
     }
 
-    fun updateUser(){
+
+    // function to update user's price and desc
+    fun updateUser(name: String, newPrice: String, newDescription:String): Boolean {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_PRICE, newPrice)
+            put(COLUMN_DESCRIPTION, newDescription)
+        }
+
+        val updateRow = db.update(
+            TABLE_NAME,
+            values,
+            "$COLUMN_NAME=?",
+            arrayOf(name)
+        )
+        db.close()
+        return updateRow > 0
     }
-    }
+}
