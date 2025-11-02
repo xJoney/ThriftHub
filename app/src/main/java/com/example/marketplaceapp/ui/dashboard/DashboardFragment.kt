@@ -9,6 +9,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.marketplaceapp.databinding.FragmentDashboardBinding
 import com.example.marketplaceapp.R
+import android.widget.*
+import com.example.marketplaceapp.AddItemActivity
+import com.example.marketplaceapp.DatabaseHelper
+import android.content.Intent
+
 
 class DashboardFragment : Fragment() {
 
@@ -21,26 +26,36 @@ class DashboardFragment : Fragment() {
     ): View {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
-        val items = listOf(
-            ListingData("Title 1", "Updated today", R.drawable.ic_launcher_background),
-            ListingData("Title 2", "Updated yesterday", R.drawable.ic_launcher_background),
-            ListingData("Title 3", "Updated 2 days ago", R.drawable.ic_launcher_background)
-        )
-
-        binding.recyclerListings.layoutManager = GridLayoutManager(requireContext(), 3)
-
-        binding.recyclerListings.adapter = ListingAdapter(items) { selectedItem ->
-            val action = DashboardFragmentDirections
-                .actionNavDashboardToItemDetailFragment(
-                    itemTitle = selectedItem.title,
-                    itemDescription = selectedItem.updated,
-                    itemImage = selectedItem.imageRes
-                )
-
-            findNavController().navigate(action)
+        // initialize db and get all users data
+        val db = DatabaseHelper(requireContext())
+        val listings = db.getAllUsers()
+        //testing
+        if (listings.isEmpty()) {
+            Toast.makeText(requireContext(), "No listings found in database", Toast.LENGTH_SHORT).show()
         }
-
+        // Setup RecyclerView layout and adapter
+        binding.recyclerListings.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.recyclerListings.adapter = ListingAdapter(listings) { selectedItem ->
+            Toast.makeText(requireContext(), "Clicked: ${selectedItem.item}", Toast.LENGTH_SHORT).show()
+        }
+        // opents add item activity
+        val btnAdd = binding.btnAdd
+        btnAdd.setOnClickListener {
+           val intent = Intent(requireContext(), AddItemActivity::class.java)
+            startActivity(intent)
+        }
         return binding.root
+    }
+
+    // reloads the data from the database to get updated ver.
+    override fun onResume() {
+        super.onResume()
+        val db = DatabaseHelper(requireContext())
+        val updatedListing =  db.getAllUsers()
+        val adapter = ListingAdapter(updatedListing){ selectedItem ->
+            Toast.makeText(requireContext(), "Clicked: ${selectedItem.item}",Toast.LENGTH_SHORT).show()
+        }
+        binding.recyclerListings.adapter = adapter
     }
 
     override fun onDestroyView() {

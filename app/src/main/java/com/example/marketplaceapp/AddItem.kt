@@ -29,7 +29,6 @@ class AddItemActivity : AppCompatActivity() {
         val clear = findViewById<Button>(R.id.clear)
 
         val users = dbHelper.getAllUsers()
-        outputText.text = users.joinToString("\n")
 
         addButton.setOnClickListener {
             val name = nameInput.text.toString()

@@ -1,5 +1,5 @@
 package com.example.marketplaceapp
-
+import com.example.marketplaceapp.ui.dashboard.ListingData
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.content.Context
@@ -55,10 +55,10 @@ class DatabaseHelper(context: Context) :
         return result != -1L
     }
 
-    fun getAllUsers(): List<User> {
+    fun getAllUsers(): List<ListingData> {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
-        val userList = mutableListOf<User>()
+        val userList = mutableListOf<ListingData>()
 
         if (cursor.moveToFirst()) {
             do {
@@ -67,12 +67,13 @@ class DatabaseHelper(context: Context) :
                 val address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS))
                 val price = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRICE))
                 val desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
-                val user = User(name, item, address, price, desc)
+                val user = ListingData(name, item, address, price, desc)
                 userList.add(user)
             } while (cursor.moveToNext())
         }
 
         cursor.close()
+        db.close()
         return userList
     }
 

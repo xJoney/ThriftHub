@@ -20,12 +20,13 @@ class ListingAdapter(
         return ViewHolder(binding)
     }
 
+
+    // connects the data object from db to the xml layout
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
-        holder.binding.txtTitle.text = item.title
-        holder.binding.txtUpdated.text = item.updated
-        holder.binding.imgItem.setImageResource(item.imageRes)
+        holder.binding.txtTitle.text = item.item
+        holder.binding.txtUpdated.text = item.description
 
         holder.binding.root.setOnClickListener {
             onItemClick(item) }

@@ -1,7 +1,9 @@
 package com.example.marketplaceapp.ui.dashboard
 
 data class ListingData(
-    val title: String,
-    val updated: String,
-    val imageRes: Int
+    val name: String,
+    val item: String,
+    val address: String,
+    val price: String,
+    val description: String
 )
