@@ -38,7 +38,7 @@ class DashboardFragment : Fragment() {
         binding.recyclerListings.adapter = ListingAdapter(listings) { selectedItem ->
             Toast.makeText(requireContext(), "Clicked: ${selectedItem.item}", Toast.LENGTH_SHORT).show()
         }
-        // opents add item activity
+        // opens add item activity
         val btnAdd = binding.btnAdd
         btnAdd.setOnClickListener {
            val intent = Intent(requireContext(), AddItemActivity::class.java)
@@ -59,7 +59,7 @@ class DashboardFragment : Fragment() {
                 .actionNavDashboardToItemDetailFragment(
                     itemTitle = selectedItem.item,
                     itemDescription = selectedItem.description,
-                    itemImage = R.drawable.ic_launcher_background,  // placeholder image
+                    itemImageUri = selectedItem.imageUri ?: "",
                     sellerName = selectedItem.name
                 )
 

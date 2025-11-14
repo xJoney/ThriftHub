@@ -5,5 +5,6 @@ data class ListingData(
     val item: String,
     val address: String,
     val price: String,
-    val description: String
+    val description: String,
+    val imageUri: String? = null
 )
