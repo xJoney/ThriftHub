@@ -25,12 +25,15 @@ class DatabaseHelper(context: Context) :
         private const val COLUMN_PASSWORD = "password"
 
         private const val COLUMN_IMAGE = "imageUri"
+
+        private const val COLUMN_USER_ID = "userId"
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
         val createTable = """
             CREATE TABLE $TABLE_LISTINGS (
                 $COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COLUMN_USER_ID TEXT,
                 $COLUMN_NAME TEXT,
                 $COLUMN_ITEM TEXT,
                 $COLUMN_ADDRESS TEXT,
@@ -59,6 +62,7 @@ class DatabaseHelper(context: Context) :
 
     // function to insert user data
     fun insertUser(
+        userId: String,
         name: String,
         item: String,
         address: String,
@@ -68,6 +72,7 @@ class DatabaseHelper(context: Context) :
     ): Boolean {
         val db = writableDatabase
         val values = ContentValues().apply {
+            put(COLUMN_USER_ID, userId)
             put(COLUMN_NAME, name)
             put(COLUMN_ITEM, item)
             put(COLUMN_ADDRESS, address)
@@ -88,6 +93,8 @@ class DatabaseHelper(context: Context) :
 
         if (cursor.moveToFirst()) {
             do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val userId = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USER_ID))
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)) ?: ""
                 val item = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM)) ?: ""
                 val address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS)) ?: ""
@@ -95,14 +102,45 @@ class DatabaseHelper(context: Context) :
                 val desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION)) ?: ""
                 val imageUri = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE))
 
-
-                userList.add(ListingData(name, item, address, price, desc, imageUri))
+                userList.add(
+                    ListingData(id, name, item, address, price, desc, imageUri, userId)
+                )
             } while (cursor.moveToNext())
         }
 
         cursor.close()
         db.close()
         return userList
+    }
+
+    fun getListingsByUser(userId: String): List<ListingData> {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_LISTINGS WHERE $COLUMN_USER_ID = ?",
+            arrayOf(userId)
+        )
+
+        val list = mutableListOf<ListingData>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME))
+                val item = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ITEM))
+                val address = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ADDRESS))
+                val price = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PRICE))
+                val desc = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION))
+                val imageUri = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE))
+
+                list.add(
+                    ListingData(id, name, item, address, price, desc, imageUri, userId)
+                )
+            } while (cursor.moveToNext())
+        }
+
+        cursor.close()
+        db.close()
+        return list
     }
 
 
@@ -123,23 +161,48 @@ class DatabaseHelper(context: Context) :
         return deletedRows > 0
     }
 
-    // function to update user's price and desc
-    fun updateUser(name: String, newPrice: String, newDescription: String): Boolean {
+    fun deleteListingById(id: Int): Boolean {
         val db = writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_PRICE, newPrice)
-            put(COLUMN_DESCRIPTION, newDescription)
-        }
-
-        val updateRow = db.update(
+        val deletedRows = db.delete(
             TABLE_LISTINGS,
-            values,
-            "$COLUMN_NAME=?",
-            arrayOf(name)
+            "$COLUMN_ID=?",
+            arrayOf(id.toString())
         )
         db.close()
-        return updateRow > 0
+        return deletedRows > 0
     }
+
+
+    // function to update user's price and desc
+    fun updateListingById(
+        id: Int,
+        newItem: String,
+        newAddress: String,
+        newPrice: String,
+        newDescription: String,
+        newImageUri: String?
+    ): Boolean {
+
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_ITEM, newItem)
+            put(COLUMN_ADDRESS, newAddress)
+            put(COLUMN_PRICE, newPrice)
+            put(COLUMN_DESCRIPTION, newDescription)
+            put(COLUMN_IMAGE, newImageUri)
+        }
+
+        val result = db.update(
+            TABLE_LISTINGS,
+            values,
+            "$COLUMN_ID = ?",
+            arrayOf(id.toString())
+        )
+
+        db.close()
+        return result > 0
+    }
+
 
     fun registerUser(email: String, password: String): Boolean {
         val db = writableDatabase

@@ -12,6 +12,8 @@ import android.provider.MediaStore
 import androidx.activity.result.contract.ActivityResultContracts
 import java.io.File
 import java.io.FileOutputStream
+import com.google.firebase.auth.FirebaseAuth
+
 
 class AddItemActivity : AppCompatActivity() {
 
@@ -23,7 +25,15 @@ class AddItemActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_item)
 
         dbHelper = DatabaseHelper(this)
+        val user = FirebaseAuth.getInstance().currentUser
+        val userId = user?.uid
         dbHelper.readableDatabase
+
+        if (userId == null) {
+            Toast.makeText(this, "Please log in to add items", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
         val nameInput = findViewById<EditText>(R.id.nameInput)
         val itemInput = findViewById<EditText>(R.id.itemInput)
@@ -44,7 +54,7 @@ class AddItemActivity : AppCompatActivity() {
             val description = descInput.text.toString()
             val imageUri = selectedImageUri?.toString() ?: ""
 
-            if (dbHelper.insertUser(name, item, address, price, description, imageUri)) {
+            if (dbHelper.insertUser(userId, name, item, address, price, description, imageUri)) {
                 Toast.makeText(this, "Item added!", Toast.LENGTH_SHORT).show()
                 finish()
             } else {
@@ -76,32 +86,6 @@ class AddItemActivity : AppCompatActivity() {
 //            outputText.text = users.joinToString("\n")
 //            Toast.makeText(this, "All records deleted", Toast.LENGTH_SHORT).show()
 //        }
-
-        //need to move this to your listings page
-        val delete = findViewById<Button>(R.id.deletebtn)
-        delete.setOnClickListener {
-            val item = itemInput.text.toString()
-            if (dbHelper.delUser(item)) {
-                Toast.makeText(this, "Deleted item!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Delete failed", Toast.LENGTH_SHORT).show()
-            }
-        }
-
-        // update button - find the row with name and updates new price and description from user input
-        //need to move this to your listings page
-        val update = findViewById<Button>(R.id.updatebtn)
-        update.setOnClickListener {
-            val name = nameInput.text.toString()
-            val price = priceInput.text.toString()
-            val description = descInput.text.toString()
-            if (dbHelper.updateUser(name,price,description)) {
-                Toast.makeText(this, "Updated item!", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "update failed", Toast.LENGTH_SHORT).show()
-            }
-            val users = dbHelper.getAllUsers()
-        }
 
         //back button to return to homepage
         val back = findViewById<Button>(R.id.backbtn)

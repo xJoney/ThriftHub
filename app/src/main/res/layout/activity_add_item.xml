@@ -82,20 +82,7 @@
         android:layout_marginBottom="8dp"
         android:text="add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/updatebtn" />
-
-    <Button
-        android:id="@+id/deletebtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/updatebtn"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/backbtn" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/backbtn"
@@ -104,18 +91,6 @@
         android:layout_marginBottom="8dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/deletebtn"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/updatebtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Update"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/addButton"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/deletebtn" />
 </androidx.constraintlayout.widget.ConstraintLayout>

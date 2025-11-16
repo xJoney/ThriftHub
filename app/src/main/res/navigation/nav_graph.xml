@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/nav_dashboard">
 
     <fragment
@@ -11,6 +12,10 @@
         <action
             android:id="@+id/action_nav_dashboard_to_itemDetailFragment"
             app:destination="@id/itemDetailFragment" />
+
+        <action
+            android:id="@+id/action_nav_dashboard_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
     </fragment>
 
     <fragment
@@ -22,6 +27,56 @@
             android:id="@+id/action_nav_chats_to_chatDetailFragment"
             app:destination="@id/chatDetailFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/yourListingsFragment"
+        android:name="com.example.marketplaceapp.ui.yourlistings.YourListingsFragment"
+        android:label="Your Listings"
+        tools:layout="@layout/fragment_your_listings">
+
+        <action
+            android:id="@+id/action_yourListingsFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+
+        <action
+            android:id="@+id/action_yourListingsFragment_to_editListingFragment"
+            app:destination="@id/editListingFragment" />
+
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/editListingFragment"
+        android:name="com.example.marketplaceapp.ui.yourlistings.EditListingFragment"
+        android:label="Edit Listing">
+
+        <argument
+            android:name="listingId"
+            app:argType="integer" />
+
+        <argument
+            android:name="itemTitle"
+            app:argType="string" />
+
+        <argument
+            android:name="itemAddress"
+            app:argType="string" />
+
+        <argument
+            android:name="itemPrice"
+            app:argType="string" />
+
+        <argument
+            android:name="itemDescription"
+            app:argType="string" />
+
+        <argument
+            android:name="itemImageUri"
+            app:argType="string" />
+
+    </fragment>
+
+
 
     <fragment
         android:id="@+id/nav_account"

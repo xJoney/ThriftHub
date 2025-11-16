@@ -13,7 +13,7 @@ import android.widget.*
 import com.example.marketplaceapp.AddItemActivity
 import com.example.marketplaceapp.DatabaseHelper
 import android.content.Intent
-
+import com.google.firebase.auth.FirebaseAuth
 
 class DashboardFragment : Fragment() {
 
@@ -24,32 +24,49 @@ class DashboardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
 
-        // initialize db and get all users data
+        _binding = FragmentDashboardBinding.inflate(inflater, container, false)
+        val binding = _binding!!
+
+        //login check
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            findNavController().navigate(R.id.LoginFragment)
+            return binding.root
+        }
+
+        //load listings
         val db = DatabaseHelper(requireContext())
         val listings = db.getAllUsers()
-        //testing
+
         if (listings.isEmpty()) {
-            Toast.makeText(requireContext(), "No listings found in database", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "No listings found", Toast.LENGTH_SHORT).show()
         }
-        // Setup RecyclerView layout and adapter
+
         binding.recyclerListings.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerListings.adapter = ListingAdapter(listings) { selectedItem ->
-            Toast.makeText(requireContext(), "Clicked: ${selectedItem.item}", Toast.LENGTH_SHORT).show()
+
+            val action = DashboardFragmentDirections
+                .actionNavDashboardToItemDetailFragment(
+                    itemTitle = selectedItem.item,
+                    itemDescription = selectedItem.description,
+                    itemImageUri = selectedItem.imageUri ?: "",
+                    sellerName = selectedItem.name
+                )
+
+            findNavController().navigate(action)
         }
-        // opens add item activity
-        val btnAdd = binding.btnAdd
-        btnAdd.setOnClickListener {
-           val intent = Intent(requireContext(), AddItemActivity::class.java)
-            startActivity(intent)
+
+        binding.btnAdd.setOnClickListener {
+            startActivity(Intent(requireContext(), AddItemActivity::class.java))
         }
+
         return binding.root
     }
 
-    // reloads the data from the database to get updated ver.
     override fun onResume() {
         super.onResume()
+
         val db = DatabaseHelper(requireContext())
         val updatedListing = db.getAllUsers()
 
@@ -66,7 +83,6 @@ class DashboardFragment : Fragment() {
             findNavController().navigate(action)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

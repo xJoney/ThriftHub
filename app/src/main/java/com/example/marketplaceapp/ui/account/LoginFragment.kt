@@ -26,10 +26,6 @@ class LoginFragment : Fragment() {
             findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToSignupFragment())
         }
 
-        binding.loginbtnBack.setOnClickListener {
-            findNavController().navigateUp()
-        }
-
         binding.btnLogin.setOnClickListener {
             val email = binding.inputEmail.text.toString()
             val password = binding.inputPassword.text.toString()
