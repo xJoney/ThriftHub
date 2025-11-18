@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.marketplaceapp.databinding.FragmentChatsBinding
 import androidx.navigation.fragment.findNavController
 import androidx.core.widget.addTextChangedListener
+import com.example.marketplaceapp.R
+import com.google.firebase.auth.FirebaseAuth
 
 class ChatsFragment : Fragment() {
 
@@ -19,6 +21,11 @@ class ChatsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentChatsBinding.inflate(inflater, container, false)
+        val user = FirebaseAuth.getInstance().currentUser
+        if (user == null) {
+            findNavController().navigate(R.id.LoginFragment)
+            return binding.root
+        }
 
         val chatItems = listOf(
             ChatData("Jonathan", "Hey, is this still available?"),

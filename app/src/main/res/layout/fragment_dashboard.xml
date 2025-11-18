@@ -69,13 +69,6 @@
             android:src="@drawable/ic_add"
             app:tint="#6A4AA5" />
 
-        <ImageView
-            android:id="@+id/btnGrid"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
-            android:src="@drawable/ic_grid"
-            android:layout_marginStart="16dp"
-            app:tint="#6A4AA5" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
