@@ -1,60 +1,128 @@
-package com.example.marketplaceapp.ui.maps
+package com.example.marketplaceapp.ui.location
 
+import android.location.Geocoder
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.marketplaceapp.R
+import com.example.marketplaceapp.databinding.FragmentLocationPickerBinding
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class LocationPickerFragment : Fragment(), OnMapReadyCallback {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [LocationPickerFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class LocationPickerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentLocationPickerBinding? = null
+    private var typedAddress: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    private val binding get() = _binding!!
+
+    private lateinit var googleMap: GoogleMap
+    private var selectedLatLng: LatLng? = null
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentLocationPickerBinding.inflate(inflater, container, false)
+        binding.btnLocationBack.bringToFront()
+        binding.locationSearchInputLayout.bringToFront()
+        binding.btnLocationBack.translationZ = 16f
+        binding.locationSearchInputLayout.translationZ = 16f
+
+        //load map fragment
+        val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment)
+                as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        // back button
+        binding.btnLocationBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
+        //search bar- convert text to lat/lng
+        binding.locationSearchBar.setOnEditorActionListener { v, actionId, event ->
+            val text = binding.locationSearchBar.text.toString().trim()
+            if (text.isNotEmpty()) searchAddress(text)
+            true
+        }
+
+        // confirm- return address
+        binding.btnConfirmLocation.setOnClickListener {
+            if (selectedLatLng == null) {
+                Toast.makeText(requireContext(), "Pick a location", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val finalAddress = typedAddress ?: run {
+                val geocoder = Geocoder(requireContext())
+                val result = geocoder.getFromLocation(
+                    selectedLatLng!!.latitude,
+                    selectedLatLng!!.longitude,
+                    1
+                )
+                result?.firstOrNull()?.getAddressLine(0) ?: "Unknown location"
+            }
+
+            parentFragmentManager.setFragmentResult(
+                "locationRequestKey",
+                bundleOf("selectedAddress" to finalAddress)
+            )
+
+            findNavController().navigateUp()
+        }
+
+
+        return binding.root
+    }
+
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        //move camera to Toronto initially
+        val toronto = LatLng(43.6532, -79.3832)
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(toronto, 12f))
+
+        // when user taps map- place marker
+        googleMap.setOnMapClickListener { latLng ->
+            googleMap.clear()
+            googleMap.addMarker(MarkerOptions().position(latLng))
+            selectedLatLng = latLng
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_location_picker, container, false)
-    }
+    //search address and update map
+    private fun searchAddress(query: String) {
+        typedAddress = query  // save what user typed
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment LocationPickerFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            LocationPickerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        val geocoder = Geocoder(requireContext())
+        val list = geocoder.getFromLocationName(query, 1)
+
+        if (list.isNullOrEmpty()) {
+            Toast.makeText(requireContext(), "Address not found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val address = list.first()
+        val latLng = LatLng(address.latitude, address.longitude)
+
+        googleMap.clear()
+        googleMap.addMarker(MarkerOptions().position(latLng))
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+
+        selectedLatLng = latLng
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

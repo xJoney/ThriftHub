@@ -1,16 +1,19 @@
-package com.example.marketplaceapp.ui.dashboard
-
 import android.graphics.BitmapFactory
-import android.net.Uri
+import android.media.ThumbnailUtils
+import android.provider.MediaStore
+import android.util.Size
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.marketplaceapp.R
 import com.example.marketplaceapp.databinding.ItemListingBinding
+import com.example.marketplaceapp.ui.dashboard.ListingData
+import java.io.File
 
 class ListingAdapter(
     private val items: List<ListingData>,
-    private val onItemClick: (ListingData) -> Unit) : RecyclerView.Adapter<ListingAdapter.ViewHolder>() {
+    private val onItemClick: (ListingData) -> Unit
+) : RecyclerView.Adapter<ListingAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemListingBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -23,8 +26,6 @@ class ListingAdapter(
         return ViewHolder(binding)
     }
 
-
-    // connects the data object from db to the xml layout
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = items[position]
 
@@ -32,26 +33,51 @@ class ListingAdapter(
         holder.binding.txtUpdated.text = item.description
         holder.binding.txtPrice.text = "$${item.price}"
 
-        if (!item.imageUri.isNullOrEmpty()) {
-            try {
-                val uri = Uri.parse(item.imageUri)
-                val stream = holder.binding.root.context.contentResolver.openInputStream(uri)
-                val bitmap = BitmapFactory.decodeStream(stream)
-                holder.binding.imgItem.setImageBitmap(bitmap)
-                stream?.close()
-            } catch (e: Exception) {
-                e.printStackTrace()
-                holder.binding.imgItem.setImageResource(android.R.color.darker_gray)
+        val media = item.imageUri ?: ""
+
+        when {
+            media.startsWith("video:") -> {
+                val path = media.removePrefix("video:")
+                val clean = path.replace("file://", "").replace("file:/", "")
+
+                val thumb = ThumbnailUtils.createVideoThumbnail(
+                    clean,
+                    MediaStore.Images.Thumbnails.MINI_KIND
+                )
+
+                if (thumb != null) {
+                    holder.binding.itemImage.setImageBitmap(thumb)
+                } else {
+                    holder.binding.itemImage.setImageResource(R.drawable.ic_video_placeholder)
+                }
             }
-        } else {
-            holder.binding.imgItem.setImageResource(android.R.color.darker_gray)
+
+            media.startsWith("image:") || media.contains("image", ignoreCase = true) -> {
+                val path = media.removePrefix("image:")
+                val bitmap = BitmapFactory.decodeFile(path)
+                if (bitmap != null) {
+                    holder.binding.itemImage.setImageBitmap(bitmap)
+                } else {
+                    holder.binding.itemImage.setImageResource(R.drawable.ic_image_placeholder)
+                }
+            }
+
+            media.isNotEmpty() -> {
+                val bitmap = BitmapFactory.decodeFile(media)
+                if (bitmap != null) {
+                    holder.binding.itemImage.setImageBitmap(bitmap)
+                } else {
+                    holder.binding.itemImage.setImageResource(R.drawable.ic_image_placeholder)
+                }
+            }
+
+            else -> {
+                holder.binding.itemImage.setImageResource(R.drawable.ic_image_placeholder)
+            }
         }
 
         holder.binding.root.setOnClickListener { onItemClick(item) }
     }
-
-
-
 
     override fun getItemCount(): Int = items.size
 }

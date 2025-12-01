@@ -39,7 +39,7 @@ class SignupFragment : Fragment() {
                     if (task.isSuccessful) {
                         Toast.makeText(requireContext(), "Account created!", Toast.LENGTH_SHORT).show()
 
-                        // Navigate to login
+                        //to navigate to login
                         findNavController().navigate(
                             SignupFragmentDirections.actionSignupFragmentToLoginFragment()
                         )

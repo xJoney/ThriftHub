@@ -149,18 +149,6 @@ class DatabaseHelper(context: Context) :
         db.delete(TABLE_LISTINGS, null, null)
     }
 
-    // delete row based on item name
-    fun delUser(itemName: String): Boolean {
-        val db = writableDatabase
-        val deletedRows = db.delete(
-            TABLE_LISTINGS,
-            "$COLUMN_ITEM=?",
-            arrayOf(itemName)
-        )
-        db.close()
-        return deletedRows > 0
-    }
-
     fun deleteListingById(id: Int): Boolean {
         val db = writableDatabase
         val deletedRows = db.delete(
