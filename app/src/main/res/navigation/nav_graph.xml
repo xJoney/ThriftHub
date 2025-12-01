@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/nav_dashboard">
+    app:startDestination="@id/LoginFragment">
 
     <fragment
         android:id="@+id/nav_dashboard"
@@ -143,10 +143,30 @@
         <argument
             android:name="sellerName"
             app:argType="string" />
+        <argument
+            android:name="itemAddress"
+            app:argType="string" />
 
         <action
             android:id="@+id/action_itemDetailFragment_to_chatDetailFragment"
             app:destination="@id/chatDetailFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/addItemFragment"
+        android:name="com.example.marketplaceapp.ui.additem.AddItemFragment"
+        android:label="Add Item">
+
+        <action
+            android:id="@+id/action_addItemFragment_to_locationPickerFragment"
+            app:destination="@id/locationPickerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationPickerFragment"
+        android:name="com.example.marketplaceapp.ui.location.LocationPickerFragment"
+        android:label="Choose Location" />
+
+
 
 </navigation>

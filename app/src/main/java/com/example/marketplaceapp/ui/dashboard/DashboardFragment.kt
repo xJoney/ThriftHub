@@ -1,5 +1,6 @@
 package com.example.marketplaceapp.ui.dashboard
 
+import ListingAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,10 +11,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.marketplaceapp.databinding.FragmentDashboardBinding
 import com.example.marketplaceapp.R
 import android.widget.*
-import com.example.marketplaceapp.AddItemActivity
+import com.example.marketplaceapp.ui.additem.AddItemFragment
 import com.example.marketplaceapp.DatabaseHelper
 import android.content.Intent
 import com.google.firebase.auth.FirebaseAuth
+
 
 class DashboardFragment : Fragment() {
 
@@ -51,14 +53,15 @@ class DashboardFragment : Fragment() {
                     itemTitle = selectedItem.item,
                     itemDescription = selectedItem.description,
                     itemImageUri = selectedItem.imageUri ?: "",
-                    sellerName = selectedItem.name
+                    sellerName = selectedItem.name,
+                    itemAddress = selectedItem.address
                 )
 
             findNavController().navigate(action)
         }
 
         binding.btnAdd.setOnClickListener {
-            startActivity(Intent(requireContext(), AddItemActivity::class.java))
+            findNavController().navigate(com.example.marketplaceapp.R.id.addItemFragment)
         }
 
         return binding.root
@@ -77,7 +80,8 @@ class DashboardFragment : Fragment() {
                     itemTitle = selectedItem.item,
                     itemDescription = selectedItem.description,
                     itemImageUri = selectedItem.imageUri ?: "",
-                    sellerName = selectedItem.name
+                    sellerName = selectedItem.name,
+                    itemAddress = selectedItem.address
                 )
 
             findNavController().navigate(action)

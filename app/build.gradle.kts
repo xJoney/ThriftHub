@@ -1,3 +1,5 @@
+println("DEBUG MAPS KEY: " + project.findProperty("MAPS_API_KEY"))
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -20,6 +22,9 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders["MAPS_API_KEY"] =
+            project.findProperty("MAPS_API_KEY") as? String ?: ""
     }
 
     buildTypes {
@@ -53,5 +58,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation("androidx.cardview:cardview:1.0.0")
-
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+    implementation("com.google.android.libraries.places:places:3.4.0")
+    implementation("com.google.android.exoplayer:exoplayer:2.19.0")
 }

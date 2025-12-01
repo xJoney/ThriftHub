@@ -1,56 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="6dp"
-    android:gravity="center">
+    android:padding="6dp">
 
-    <!-- Square container -->
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="120dp"
+    <FrameLayout
+        android:id="@+id/mediaContainer"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="1:1">
 
         <ImageView
-            android:id="@+id/imgItem"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:id="@+id/itemImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:background="#E2D8EF"
-            android:adjustViewBounds="true"
-            android:clipToOutline="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintDimensionRatio="1:1" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="#E6E6E6" />
+
+        <VideoView
+            android:id="@+id/itemVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
     <TextView
         android:id="@+id/txtTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
+        android:layout_marginTop="6dp"
         android:textColor="#000"
         android:textSize="14sp"
-        android:layout_marginTop="6dp"/>
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/mediaContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/txtPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#000"
-        android:textSize="14sp"
-        android:layout_marginTop="2dp"/>
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
         android:id="@+id/txtUpdated"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textColor="#7A7A7A"
         android:textSize="12sp"
-        android:layout_marginTop="2dp"/>
+        app:layout_constraintTop_toBottomOf="@id/txtPrice"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

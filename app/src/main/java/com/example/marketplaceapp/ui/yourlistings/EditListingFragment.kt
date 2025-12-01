@@ -1,15 +1,18 @@
 package com.example.marketplaceapp.ui.yourlistings
-import android.net.Uri
+
+import android.graphics.BitmapFactory
+import android.media.ThumbnailUtils
+import android.provider.MediaStore
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.marketplaceapp.DatabaseHelper
 import com.example.marketplaceapp.databinding.FragmentEditListingBinding
+import java.io.File
 
 class EditListingFragment : Fragment() {
 
@@ -27,57 +30,76 @@ class EditListingFragment : Fragment() {
         _binding = FragmentEditListingBinding.inflate(inflater, container, false)
         db = DatabaseHelper(requireContext())
 
-        // get args sent from YourListingsFragment
         val args = EditListingFragmentArgs.fromBundle(requireArguments())
 
-        // show original data
         binding.editTitle.setText(args.itemTitle)
         binding.editAddress.setText(args.itemAddress)
         binding.editPrice.setText(args.itemPrice)
         binding.editDescription.setText(args.itemDescription)
 
-        if (!args.itemImageUri.isNullOrEmpty()) {
-            binding.imgPreview.setImageURI(Uri.parse(args.itemImageUri))
-        }
+        loadMediaPreview(args.itemImageUri)
 
-        //update
         binding.btnUpdate.setOnClickListener {
-            val updatedItem = binding.editTitle.text.toString()
-            val updatedAddress = binding.editAddress.text.toString()
-            val updatedPrice = binding.editPrice.text.toString()
-            val updatedDescription = binding.editDescription.text.toString()
-            val updatedImageUri = args.itemImageUri   // keep same image for now
-
             val success = db.updateListingById(
                 id = args.listingId,
-                newItem = updatedItem,
-                newAddress = updatedAddress,
-                newPrice = updatedPrice,
-                newDescription = updatedDescription,
-                newImageUri = updatedImageUri
+                newItem = binding.editTitle.text.toString(),
+                newAddress = binding.editAddress.text.toString(),
+                newPrice = binding.editPrice.text.toString(),
+                newDescription = binding.editDescription.text.toString(),
+                newImageUri = args.itemImageUri // keep same media
             )
 
-            if (success) {
-                Toast.makeText(requireContext(), "Listing Updated", Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
-            } else {
-                Toast.makeText(requireContext(), "Update failed", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(requireContext(),
+                if (success) "Listing Updated" else "Update Failed",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            if (success) findNavController().navigateUp()
         }
 
-        //delete
         binding.btnDelete.setOnClickListener {
             val deleted = db.deleteListingById(args.listingId)
 
-            if (deleted) {
-                Toast.makeText(requireContext(), "Listing Deleted", Toast.LENGTH_SHORT).show()
-                findNavController().navigateUp()
-            } else {
-                Toast.makeText(requireContext(), "Delete failed", Toast.LENGTH_SHORT).show()
-            }
+            Toast.makeText(requireContext(),
+                if (deleted) "Listing Deleted" else "Delete Failed",
+                Toast.LENGTH_SHORT
+            ).show()
+
+            if (deleted) findNavController().navigateUp()
+        }
+
+        binding.edititembtnBack.setOnClickListener {
+            findNavController().navigateUp()
         }
 
         return binding.root
+    }
+
+    private fun loadMediaPreview(media: String?) {
+        if (media.isNullOrEmpty()) return
+
+        val fileName = File(media.removePrefix("image:").removePrefix("video:")).name
+        val file = File(requireContext().filesDir, fileName)
+
+        if (!file.exists()) {
+            return
+        }
+
+        when {
+            media.startsWith("image:") -> {
+                val bmp = BitmapFactory.decodeFile(file.absolutePath)
+                binding.imgPreview.setImageBitmap(bmp)
+            }
+
+            media.startsWith("video:") -> {
+                @Suppress("DEPRECATION")
+                val thumbnail = ThumbnailUtils.createVideoThumbnail(
+                    file.absolutePath,
+                    MediaStore.Video.Thumbnails.MINI_KIND
+                )
+                binding.imgPreview.setImageBitmap(thumbnail)
+            }
+        }
     }
 
     override fun onDestroyView() {
